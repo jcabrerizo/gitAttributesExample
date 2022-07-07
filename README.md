@@ -53,5 +53,19 @@ If you check now the files, they contain the fake token instead of the <REPLACE_
  ## Improvements / alternatives
 
 * Keep the token in an environment variable instead of inside the config file. The `sed` expression needs to be escaped name with double quotes
+* Use `-e` with `sed` for doing multiple replacements at once:
+
+```bash
+[filter "config"]
+	clean = sed \
+		-e 's:thisIsMyUserToken:<GITHUB_TOKEN>:g' \
+		-e 's:thisIsMyOrganization:<GITHUB_ORG>:g' \
+		-e 's:thisIsMyTeam:<GITHUB_TEAM>:g' \
+		-e 's:thisIsMyRepo:<GITHUB_REPOSITORY>:g'
+	smudge = sed \
+		-e 's:<GITHUB_TOKEN>:thisIsMyUserToken:g' \
+		-e 's:<GITHUB_ORG>:thisIsMyOrganization:g' \
+		-e 's:<GITHUB_TEAM>:thisIsMyTeam:g' \
+		-e 's:<GITHUB_REPOSITORY>:thisIsMyRepo:g'
+```  
 * Instead of using sed, you can pass a script to be executed on their behalf, having more flexibility. Also, the scripts can be added to the project
-* Use `-e` with `sed` for doing multiple replacements at once
